@@ -11,7 +11,7 @@ function BookEdit({singleBook, backButtonClick, books, setBooks}) {
     const handleSaveClick = async () => {
          try {
             const response = await updatedBookTitle(id, title);
-            const updatedBooks = books.map(book =>  book.id === id ?  {...book, ...response.data}: book);
+            const updatedBooks = books.map(book =>  book.id === id ?  {...book, ...response}: book);
             setBooks(updatedBooks);
             handleBackButtonClick();
          } catch(error){
