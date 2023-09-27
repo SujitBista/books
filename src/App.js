@@ -2,14 +2,12 @@ import BookCreate from "./components/BookCreate";
 import BookList from "./components/BookList";
 import {useState, useEffect, useContext} from 'react';
 import BooksContext from "./context/books";
-
-// import {v4 as uuidv4} from 'uuid';
 import axios from 'axios';
+
 function App() {
+    
     const [books, setBooks] = useState([]);
     const [error, setError] = useState(null);
-    //const handleBookCreateTitleChange = event => setTitle(event.target.value);
-    // const createBook = title => setBooks([...books, {id: uuidv4(), title: title }]);
     const {count, incrementCount} = useContext(BooksContext);
 
     useEffect(() => {
@@ -52,11 +50,27 @@ function App() {
          }
          
     }
+    
+    const editBookById = async (id, title) => {
+        try {
+           const response = await updatedBookTitle(id, title);
+           const updatedBooks = books.map(book =>  book.id === id ?  {...book, ...response}: book);
+           setBooks(updatedBooks);
+        } catch(error){
+           setError(`Error editing books: ${error.message}`);
+           console.error('Error Editing books', error);
+        }
+   }
+
+   const updatedBookTitle = async (id, title) => {
+       const response =  await axios.put(`http://localhost:3001/books/${id}`, {title});
+       return response.data;
+    }
 
     return (
         <>
             <BookCreate onCreate={createBook} error={error}/>
-            <BookList books={books} setBooks={setBooks} deleteBookById={deleteBookById} />
+            <BookList onSubmit={editBookById} books={books} deleteBookById={deleteBookById} error={error}/>
             <h2>{count}</h2>
             <button onClick={incrementCount}>incrementCount</button>
         </>

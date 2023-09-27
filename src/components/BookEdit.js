@@ -1,36 +1,28 @@
 
 import {useState} from 'react';
-import axios from 'axios';
-function BookEdit({singleBook, backButtonClick, books, setBooks}) {
-    const {id, title: initialTitle} = singleBook;
-    const [title, setTitle] = useState(initialTitle);
-    const [error, setError] = useState(null);
 
-    const handleTitleChange = event =>  setTitle(event.target.value);
-    const handleBackButtonClick = () => backButtonClick();
-    const handleSaveClick = async () => {
-         try {
-            const response = await updatedBookTitle(id, title);
-            const updatedBooks = books.map(book =>  book.id === id ?  {...book, ...response}: book);
-            setBooks(updatedBooks);
-            handleBackButtonClick();
-         } catch(error){
-            setError(`Error editing books: ${error.message}`);
-            //console.error('Error Editing books', error);
-         }
-    }
-    const updatedBookTitle = async (id, title) => {
-        const response =  await axios.put(`http://localhost:3001/books/${id}`, {title});
-        return response.data;
-     }
+function BookEdit({singleBook, backButtonClick, onSubmit, error}) {
+   const {id, title: initialTitle} = singleBook;
+   const [title, setTitle] = useState(initialTitle);
 
-    return <>
-            <input type="text" value={title} onChange={handleTitleChange} autoFocus/>
-            <br />
-            <button onClick={handleSaveClick}>Save</button>
-            <button onClick={handleBackButtonClick}>Back</button>
-            {error && <div className="error-message">{error}</div>}
-    </>
+   const handleTitleChange = event =>  setTitle(event.target.value);
+
+   const handleBackButtonClick = () => backButtonClick();
+
+   const handleSubmit = (event) => {
+      event.preventDefault();
+      onSubmit(id, title);
+   }
+
+    return (
+      <form onSubmit={handleSubmit}>
+         <input type="text" value={title} onChange={handleTitleChange} autoFocus/>
+         <br />
+         <button>Save</button>
+         <button onClick={handleBackButtonClick}>Back</button>
+         {error && <div className="error-message">{error}</div>}
+      </form>
+   );
 }
 
 export default BookEdit;
