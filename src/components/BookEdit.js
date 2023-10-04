@@ -1,9 +1,11 @@
 
-import {useState} from 'react';
+import {useState, useContext} from 'react';
+import BooksContext from '../context/books';
 
-function BookEdit({singleBook, backButtonClick, onSubmit, error}) {
+function BookEdit({singleBook, backButtonClick, onSubmit}) {
    const {id, title: initialTitle} = singleBook;
    const [title, setTitle] = useState(initialTitle);
+   const {error} = useContext(BooksContext);
 
    const handleTitleChange = event =>  setTitle(event.target.value);
 

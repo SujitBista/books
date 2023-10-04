@@ -1,10 +1,12 @@
 
-import {useState} from 'react';
+import {useState, useContext} from 'react';
 import BookEdit from './BookEdit';
+import BooksContext from '../context/books';
 import '../custom.css';
 
-function BookShow({singleBook, deleteBookById, onSubmit, error}) {
+function BookShow({singleBook}) {
     const[bookDisplayOrEdit, setBookDisplayOrEdit] = useState(false);
+    const {deleteBookById, updatedBookTitle} = useContext(BooksContext);
 
     const onDeleteButtonClick = () => deleteBookById(singleBook.id);
 
@@ -14,7 +16,7 @@ function BookShow({singleBook, deleteBookById, onSubmit, error}) {
 
     const onSaveButtonClick = (id, title) => {
         setBookDisplayOrEdit(false);
-        onSubmit(id, title);
+        updatedBookTitle(id, title);
     }
 
     let content = (
@@ -33,7 +35,6 @@ function BookShow({singleBook, deleteBookById, onSubmit, error}) {
               onSubmit={onSaveButtonClick} 
               singleBook={singleBook} 
               backButtonClick={onBackButtonClick} 
-              error={error}
             />
         );
     }
