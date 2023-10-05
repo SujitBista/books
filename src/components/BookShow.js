@@ -5,19 +5,14 @@ import BooksContext from '../context/books';
 import '../custom.css';
 
 function BookShow({singleBook}) {
-    const[bookDisplayOrEdit, setBookDisplayOrEdit] = useState(false);
-    const {deleteBookById, updatedBookTitle} = useContext(BooksContext);
+    const[bookShowEdit, setBookShowEdit] = useState(false);
+    const {deleteBookById} = useContext(BooksContext);
 
     const onDeleteButtonClick = () => deleteBookById(singleBook.id);
 
-    const onEditButtonClick = () => setBookDisplayOrEdit(!bookDisplayOrEdit);  
+    const onEditButtonClick = () => setBookShowEdit(!bookShowEdit);  
 
-    const onBackButtonClick = () => setBookDisplayOrEdit(false);
-
-    const onSaveButtonClick = (id, title) => {
-        setBookDisplayOrEdit(false);
-        updatedBookTitle(id, title);
-    }
+    const onBackButtonClick = () => setBookShowEdit(false);
 
     let content = (
         <>
@@ -29,11 +24,11 @@ function BookShow({singleBook}) {
         </>
     );
 
-    if(bookDisplayOrEdit) {
+    if(bookShowEdit) {
         content = (
             <BookEdit 
-              onSubmit={onSaveButtonClick} 
               singleBook={singleBook} 
+              setBookShowEdit={setBookShowEdit}
               backButtonClick={onBackButtonClick} 
             />
         );
